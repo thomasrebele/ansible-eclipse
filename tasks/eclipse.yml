@@ -18,7 +18,7 @@
 
 - name: eclipse | Download eclipse on 'master' if we don't have it
   connection: local
-  sudo: true
+  become: no
   get_url: url={{eclipse_url}}  dest={{cur_dir}}/{{eclipse_archive}} force=no
 
 - name: eclipse | Copy eclipse into place
@@ -32,7 +32,6 @@
     state=directory
     owner="{{eclipse_owner}}"
     group="{{eclipse_group}}"
-  sudo : yes
   when: eclipse_download.changed
   tags: eclipse_setup
 
@@ -76,7 +75,6 @@
     state=link
     owner="{{eclipse_owner}}"
 #    group="{{eclipse_group}}"
-  sudo: yes
   tags: eclipse_setup
 
 - name: eclipse | Install eclipse MoDisco & EMF Facet plugins
@@ -228,7 +226,6 @@
 #Subclipse
 - name: eclipse | Install JavaHL for subclipse
   apt: pkg={{ item }} state=present
-  sudo: yes
   when: ansible_distribution == 'Debian'
   with_items:
     - libsvn-java
